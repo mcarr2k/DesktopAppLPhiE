@@ -211,15 +211,15 @@ function ComposerModal({
       title={creating ? "New alumni email" : email?.subject ?? "Email"}
       width="lg"
       footer={
-        <div className="flex justify-between">
-          <div className="flex gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
             {email && (
               <Button variant="danger" size="sm" onClick={remove}>
                 <Trash2 size={14} /> Delete
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
@@ -239,10 +239,10 @@ function ComposerModal({
       }
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             label="Subject"
-            className="col-span-2"
+            className="sm:col-span-2"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
           />

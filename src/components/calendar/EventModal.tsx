@@ -99,15 +99,15 @@ export function EventModal({ open, onClose, initial, editing }: Props) {
       title={editing ? "Edit event" : "New event"}
       width="md"
       footer={
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
             {editing && (
               <Button variant="danger" size="sm" onClick={onDelete}>
                 Delete
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
@@ -125,7 +125,7 @@ export function EventModal({ open, onClose, initial, editing }: Props) {
           onChange={(e) => setTitle(e.target.value)}
           required
         />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             label="Starts"
             type="datetime-local"

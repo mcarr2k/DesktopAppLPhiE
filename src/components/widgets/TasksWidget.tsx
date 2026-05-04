@@ -385,7 +385,7 @@ function AssignTaskModal({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Anything specific the assignee should know."
         />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-lphie-ink/70">
               Assign to
@@ -419,7 +419,7 @@ function AssignTaskModal({
             </select>
           </label>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             label="Due date"
             type="date"

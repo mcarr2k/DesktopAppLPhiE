@@ -188,8 +188,8 @@ function AgendaEditor({
       title={creating ? "New agenda" : agenda?.title ?? "Agenda"}
       width="lg"
       footer={
-        <div className="flex justify-between">
-          <div className="flex gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
             {agenda && canWrite && (
               <Button variant="danger" size="sm" onClick={remove}>
                 <Trash2 size={14} /> Delete
@@ -213,7 +213,7 @@ function AgendaEditor({
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button variant="ghost" onClick={onClose}>
               {canWrite ? "Cancel" : "Close"}
             </Button>
@@ -227,10 +227,10 @@ function AgendaEditor({
       }
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             label="Title"
-            className="col-span-2"
+            className="sm:col-span-2"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={!canWrite}

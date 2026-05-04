@@ -184,15 +184,15 @@ function SOPEditor({
       title={creating ? "New SOP" : sop?.title ?? "SOP"}
       width="lg"
       footer={
-        <div className="flex justify-between">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
             {sop && canEdit && (
               <Button variant="danger" size="sm" onClick={remove}>
                 <Trash2 size={14} /> Delete
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button variant="ghost" onClick={onClose}>
               {canEdit ? "Cancel" : "Close"}
             </Button>
@@ -206,7 +206,7 @@ function SOPEditor({
       }
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             label="Title"
             value={title}

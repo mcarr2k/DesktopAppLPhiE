@@ -21,14 +21,20 @@ const spanClass: Record<Span, string> = {
 export function Widget({ title, subtitle, colSpan = 12, actions, children }: Props) {
   return (
     <Card className={spanClass[colSpan]}>
-      <header className="flex items-start justify-between border-b border-lphie-ink/10 px-5 py-4">
-        <div>
-          <h3 className="font-display text-lg font-semibold">{title}</h3>
-          {subtitle && <p className="text-sm text-lphie-ink/60">{subtitle}</p>}
+      <header className="flex flex-wrap items-start justify-between gap-2 border-b border-lphie-ink/10 px-4 py-3 sm:px-5 sm:py-4">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-display text-base font-semibold sm:text-lg">
+            {title}
+          </h3>
+          {subtitle && (
+            <p className="text-xs text-lphie-ink/60 sm:text-sm">{subtitle}</p>
+          )}
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {actions && (
+          <div className="flex flex-wrap items-center gap-2">{actions}</div>
+        )}
       </header>
-      <div className="p-5">{children}</div>
+      <div className="p-4 sm:p-5">{children}</div>
     </Card>
   );
 }

@@ -411,7 +411,7 @@ function PaymentPlanModal({
       title="Payment plan"
       width="lg"
       footer={
-        <div className="flex justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <Button variant="danger" size="sm" onClick={waive}>
             Waive dues
           </Button>
@@ -542,7 +542,7 @@ function PaymentPlanModal({
           <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-lphie-ink/60">
             Add custom installment
           </h4>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <Input
               label="Amount"
               value={newAmount}
@@ -556,7 +556,7 @@ function PaymentPlanModal({
               value={newDueDate}
               onChange={(e) => setNewDueDate(e.target.value)}
             />
-            <div className="flex items-end">
+            <div className="col-span-2 flex items-end sm:col-span-1">
               <Button
                 size="md"
                 className="w-full"
