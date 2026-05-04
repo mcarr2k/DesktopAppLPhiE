@@ -1,0 +1,50 @@
+-- ==========================================================
+-- LPhiE BZ Dashboard — seed.sql  (OPTIONAL)
+-- ==========================================================
+-- This file is intentionally minimal. Profiles cannot be seeded
+-- here because they reference auth.users(id) — that row is only
+-- created when a real human signs up through the app.
+--
+-- After the President bootstraps via the app (see schema.sql
+-- comments and the README), they can run the snippets below
+-- in the Supabase SQL editor to pre-populate reference data.
+-- ==========================================================
+
+-- ----- starter SOP categories (no rows; just shows shape) -----
+-- The President or VP Internal can author these via the app.
+-- Example:
+-- insert into sops (title, category, body_html, updated_by)
+-- values
+--   ('Weekly meeting protocol', 'Operations', '<p>...</p>',
+--    (select id from profiles where role = 'president' limit 1)),
+--   ('New member education timeline', 'NME',     '<p>...</p>',
+--    (select id from profiles where role = 'vp_internal' limit 1));
+
+-- ----- starter dues row template ------------------------------
+-- Run this AFTER the directory has profiles. It drafts an
+-- 'unpaid' dues row for every active brother for the current
+-- semester at $250 owed. Edit the amount as needed.
+--
+-- with sem as (
+--   select case when extract(month from now()) >= 7
+--               then 'FA' || to_char(now(), 'YY')
+--               else 'SP' || to_char(now(), 'YY')
+--          end as label
+-- )
+-- insert into dues (brother_id, semester, amount_owed_cents)
+-- select p.id, sem.label, 25000
+-- from profiles p, sem
+-- where p.status in ('active','pledge')
+-- on conflict (brother_id, semester) do nothing;
+
+-- ----- example global event (only after profiles exist) -------
+-- insert into events (title, description, location, starts_at, ends_at, visibility, created_by)
+-- values (
+--   'Welcome Back Brotherhood',
+--   'First chapter meeting of the semester.',
+--   'McBryde Hall',
+--   now() + interval '7 days',
+--   now() + interval '7 days 90 minutes',
+--   'global',
+--   (select id from profiles where role = 'president' limit 1)
+-- );

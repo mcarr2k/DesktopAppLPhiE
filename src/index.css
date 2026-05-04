@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .prose :where(h1, h2, h3) {
+    font-family: theme("fontFamily.display");
+    font-weight: 700;
+    color: theme("colors.lphie.ink");
+  }
+  .prose :where(p, li) {
+    color: theme("colors.lphie.ink / 85%");
+  }
+}
+
+/* FullCalendar — match the LPhiE palette */
+.fc {
+  --fc-border-color: rgba(10, 10, 10, 0.08);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: rgba(248, 244, 232, 0.6);
+  --fc-today-bg-color: rgba(200, 160, 40, 0.08);
+  --fc-button-bg-color: #ffffff;
+  --fc-button-text-color: #0a0a0a;
+  --fc-button-border-color: rgba(10, 10, 10, 0.12);
+  --fc-button-hover-bg-color: #f8f4e8;
+  --fc-button-hover-border-color: rgba(10, 10, 10, 0.16);
+  --fc-button-active-bg-color: #c8a028;
+  --fc-button-active-border-color: #c8a028;
+  font-family: theme("fontFamily.body");
+}
+.fc .fc-toolbar-title {
+  font-family: theme("fontFamily.display");
+  font-size: 1.25rem;
+}
+.fc .fc-button {
+  text-transform: none;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  box-shadow: none;
+}
+.fc .fc-button:focus {
+  box-shadow: 0 0 0 3px rgba(200, 160, 40, 0.3);
+}
+.fc .fc-daygrid-day-number,
+.fc .fc-col-header-cell-cushion {
+  color: theme("colors.lphie.ink");
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+.fc .fc-event {
+  border-radius: 0.4rem;
+  padding: 1px 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(10, 10, 10, 0.18);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 10, 10, 0.3);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
