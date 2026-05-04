@@ -12,6 +12,7 @@ import {
   Megaphone,
   DollarSign,
   ScrollText,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -29,7 +30,12 @@ const POSITION_ICONS: Record<Position, LucideIcon> = {
   secretary: ScrollText,
 };
 
-export function Sidebar() {
+interface SidebarProps {
+  drawerOpen?: boolean;
+  onCloseDrawer?: () => void;
+}
+
+export function Sidebar({ drawerOpen = false, onCloseDrawer }: SidebarProps) {
   const { profile, isEboard, signOut } = useAuth();
   const role = profile?.role;
   const isPresident = role === "president";
@@ -71,8 +77,25 @@ export function Sidebar() {
     : "??";
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-lphie-ink/10 bg-white">
-      <div className="h-16 border-b border-lphie-ink/10" />
+    <aside
+      className={[
+        // Desktop: classic sticky sidebar in the document flow.
+        // Mobile: fixed drawer that slides in from the left.
+        "flex w-64 shrink-0 flex-col border-r border-lphie-ink/10 bg-white",
+        "fixed inset-y-0 left-0 z-40 h-screen transform transition-transform duration-200 ease-out md:sticky md:top-0 md:translate-x-0",
+        drawerOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:shadow-none",
+      ].join(" ")}
+    >
+      <div className="flex h-16 items-center justify-end border-b border-lphie-ink/10 px-3 md:hidden">
+        <button
+          onClick={onCloseDrawer}
+          aria-label="Close menu"
+          className="rounded-lg p-2 text-lphie-ink/60 hover:bg-lphie-ink/5"
+        >
+          <X size={18} />
+        </button>
+      </div>
+      <div className="hidden h-16 border-b border-lphie-ink/10 md:block" />
       <nav className="flex-1 overflow-y-auto p-3">
         <ul className="space-y-1">
           {links.map((l) => {

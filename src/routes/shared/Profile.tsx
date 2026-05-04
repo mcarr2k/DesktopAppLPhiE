@@ -49,9 +49,11 @@ export default function Profile() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-6 font-display text-3xl font-bold">My Profile</h1>
-      <div className="grid grid-cols-12 gap-6">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <h1 className="mb-6 font-display text-2xl font-bold sm:text-3xl">
+        My Profile
+      </h1>
+      <div className="grid grid-cols-12 gap-4 sm:gap-6">
         <Widget title="Personal information" colSpan={6}>
           <form onSubmit={onSave} className="space-y-4">
             <Input

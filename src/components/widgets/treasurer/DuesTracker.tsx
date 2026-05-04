@@ -80,8 +80,8 @@ export function DuesTracker({ colSpan = 12 }: { colSpan?: 4 | 6 | 8 | 12 }) {
               dues for every active brother.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-lphie-ink/5">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-xl border border-lphie-ink/5">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead className="bg-lphie-cream text-left text-xs uppercase tracking-wider text-lphie-ink/60">
                   <tr>
                     <th className="px-3 py-2">Brother</th>

@@ -61,8 +61,8 @@ export function DirectoryTable() {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-lphie-ink/5 bg-white shadow-widget">
-      <table className="w-full text-sm">
+    <div className="overflow-x-auto rounded-2xl border border-lphie-ink/5 bg-white shadow-widget">
+      <table className="w-full min-w-[700px] text-sm">
         <thead className="bg-lphie-cream text-left text-xs uppercase tracking-wider text-lphie-ink/60">
           <tr>
             <th className="px-4 py-3">Brother</th>

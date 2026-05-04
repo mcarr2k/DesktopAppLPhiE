@@ -17,20 +17,20 @@ export default function Home() {
       : null;
 
   return (
-    <div className="p-8">
-      <header className="mb-8 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <header className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-widest text-lphie-ink/60">
+          <p className="text-[10px] uppercase tracking-widest text-lphie-ink/60 sm:text-xs">
             Today
           </p>
-          <h1 className="font-display text-3xl font-bold text-lphie-ink">
+          <h1 className="font-display text-2xl font-bold text-lphie-ink sm:text-3xl">
             Welcome back, {profile.full_name.split(" ")[0]}.
           </h1>
         </div>
         {dashboardSlug && (
           <Link
             to={`/dashboard/${dashboardSlug}`}
-            className="inline-flex items-center gap-2 rounded-lg border border-lphie-ink/10 bg-white px-3 py-2 text-sm font-semibold hover:bg-lphie-cream"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-lphie-ink/10 bg-white px-3 py-2 text-sm font-semibold hover:bg-lphie-cream sm:w-auto"
           >
             <LayoutDashboard size={16} />
             My officer dashboard →
@@ -38,7 +38,7 @@ export default function Home() {
         )}
       </header>
 
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-12 gap-4 sm:gap-6">
         <TasksWidget mode="assigned-to-me" colSpan={6} />
         <UpcomingEventsWidget colSpan={6} />
         <MyDuesWidget colSpan={6} />

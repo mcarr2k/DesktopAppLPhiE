@@ -67,6 +67,34 @@
   font-size: 0.75rem;
 }
 
+/* Narrow-screen calendar tweaks */
+@media (max-width: 640px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+  .fc .fc-button {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.7rem;
+  }
+  .fc .fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+  }
+  .fc .fc-daygrid-day-number,
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.7rem;
+  }
+  .fc .fc-event {
+    font-size: 0.65rem;
+    padding: 1px 3px;
+  }
+}
+
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

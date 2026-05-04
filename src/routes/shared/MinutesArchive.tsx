@@ -153,15 +153,17 @@ export default function MinutesArchive() {
   }
 
   return (
-    <div className="p-8">
-      <header className="mb-6 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold">Meeting Minutes</h1>
-          <p className="text-sm text-lphie-ink/60">
+          <h1 className="font-display text-2xl font-bold sm:text-3xl">
+            Meeting Minutes
+          </h1>
+          <p className="text-xs text-lphie-ink/60 sm:text-sm">
             Searchable archive of regular, cabinet, and special meetings.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
           <div className="relative">
             <Search
               size={14}
@@ -233,10 +235,10 @@ export default function MinutesArchive() {
         }
       >
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Input
               label="Title"
-              className="col-span-2"
+              className="sm:col-span-2"
               value={draft.title}
               onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
               disabled={!canWrite}
@@ -271,8 +273,8 @@ export default function MinutesArchive() {
               ))}
             </div>
           </fieldset>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="lg:col-span-2">
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-lphie-ink/70">
                 Body
               </label>

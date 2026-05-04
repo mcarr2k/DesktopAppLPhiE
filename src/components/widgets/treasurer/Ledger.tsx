@@ -75,7 +75,7 @@ export function Ledger({ colSpan = 8 }: { colSpan?: 4 | 6 | 8 | 12 }) {
         </p>
       ) : (
         <div className="max-h-96 overflow-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[560px] text-sm">
             <thead className="sticky top-0 bg-white text-left text-xs uppercase tracking-wider text-lphie-ink/60">
               <tr>
                 <th className="py-2">Date</th>

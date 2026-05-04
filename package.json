@@ -6,8 +6,10 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
+    "dev:web": "LPHIE_NO_ELECTRON=1 vite --mode web",
     "build:renderer": "tsc -b && vite build",
     "build": "vite build",
+    "build:web": "LPHIE_NO_ELECTRON=1 vite build --mode web",
     "preview": "vite preview",
     "dist:mac": "npm run build && electron-builder --mac",
     "dist:win": "npm run build && electron-builder --win",

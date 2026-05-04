@@ -58,17 +58,24 @@ export function CalendarView() {
     [filtered]
   );
 
+  // FullCalendar's default headerToolbar is too crowded on phones.
+  // Use a narrow-friendly toolbar below 640px.
+  const isNarrow =
+    typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
+
   return (
-    <div className="p-8">
-      <header className="mb-6 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold">Chapter Calendar</h1>
-          <p className="text-sm text-lphie-ink/60">
+          <h1 className="font-display text-2xl font-bold sm:text-3xl">
+            Chapter Calendar
+          </h1>
+          <p className="text-xs text-lphie-ink/60 sm:text-sm">
             Global events are visible to every brother. E-board-only events
             stay between officers.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {isEboard && <VisibilityFilter />}
           <Button
             onClick={() => {
@@ -82,15 +89,28 @@ export function CalendarView() {
         </div>
       </header>
 
-      <div className="rounded-2xl border border-lphie-ink/5 bg-white p-4 shadow-widget">
+      <div className="overflow-x-auto rounded-2xl border border-lphie-ink/5 bg-white p-2 shadow-widget sm:p-4">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
+          initialView={isNarrow ? "timeGridDay" : "dayGridMonth"}
+          headerToolbar={
+            isNarrow
+              ? {
+                  left: "prev,next",
+                  center: "title",
+                  right: "today",
+                }
+              : {
+                  left: "prev,next today",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay",
+                }
+          }
+          footerToolbar={
+            isNarrow
+              ? { center: "dayGridMonth,timeGridWeek,timeGridDay" }
+              : false
+          }
           height="auto"
           events={fcEvents}
           selectable
