@@ -21,6 +21,7 @@ import { useDirectory } from "@/hooks/useDirectory";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { formatDate } from "@/lib/dates";
+import { effectiveTitles } from "@/lib/titles";
 import type { Task, TaskPriority, TaskStatus } from "@/types/db";
 import type { Role } from "@/types/role";
 
@@ -67,7 +68,7 @@ export function TasksWidget({
   subtitle,
   colSpan = 6,
 }: Props) {
-  const { user, isEboard } = useAuth();
+  const { user, profile, isEboard } = useAuth();
   const { tasks, loading, error, refetch } = useTasks(
     mode === "assigned-by-me"
       ? { assignedBy: user?.id, status: "open" }
@@ -77,6 +78,12 @@ export function TasksWidget({
 
   const dbMissing =
     !!error && /relation .*tasks.* does not exist/i.test(error);
+
+  // E-board OR cabinet chair (anyone with at least one title) can
+  // delegate, mirroring the tasks_insert_authorized RLS policy.
+  const canDelegate =
+    isEboard ||
+    (profile ? effectiveTitles(profile).length > 0 : false);
 
   const headerTitle =
     title ?? (mode === "assigned-by-me" ? "Delegated tasks" : "My tasks");
@@ -92,7 +99,7 @@ export function TasksWidget({
       subtitle={headerSubtitle}
       colSpan={colSpan}
       actions={
-        isEboard && mode === "assigned-by-me" ? (
+        canDelegate && mode === "assigned-by-me" ? (
           <Button size="sm" onClick={() => setModalOpen(true)}>
             <Plus size={14} /> Assign
           </Button>

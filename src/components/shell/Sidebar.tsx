@@ -21,6 +21,7 @@ import {
   POSITION_LABELS,
   type Position,
 } from "@/types/role";
+import { joinTitlesShort } from "@/lib/titles";
 
 const POSITION_ICONS: Record<Position, LucideIcon> = {
   president: Crown,
@@ -166,7 +167,10 @@ export function Sidebar({ drawerOpen = false, onCloseDrawer }: SidebarProps) {
               </p>
               <p className="truncate text-[10px] uppercase tracking-wider text-lphie-ink/60">
                 {POSITION_LABELS[profile.role]}
-                {profile.title ? ` · ${profile.title}` : ""}
+                {(() => {
+                  const t = joinTitlesShort(profile, 1);
+                  return t ? ` · ${t}` : "";
+                })()}
               </p>
             </div>
           </div>

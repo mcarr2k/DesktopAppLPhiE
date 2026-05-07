@@ -66,6 +66,12 @@
   font-weight: 600;
   font-size: 0.75rem;
 }
+/* E-board-only events get a dashed gold ring so officers can spot
+   them even when the category color matches a global event. */
+.fc .fc-event-eboard {
+  outline: 2px dashed #c8a028;
+  outline-offset: -3px;
+}
 
 /* Narrow-screen calendar tweaks */
 @media (max-width: 640px) {

@@ -57,15 +57,28 @@ create table if not exists profiles (
   pledge_class text,
   graduation_year int,
   avatar_url text,
-  -- Cabinet / committee chair title (e.g. "Rush Chair", "Historian").
-  -- Free-form text so the chapter can extend without a schema change.
-  -- This is purely descriptive — RLS / e-board checks key off `role`.
+  -- Cabinet / committee chair titles (e.g. "Rush Chair", "Historian").
+  -- A brother can hold multiple in a single semester (Risk Mgmt +
+  -- Service + Fundraising is a common stack), so this is an array.
+  -- Free-form so the chapter can extend without a schema change.
+  -- Purely descriptive — RLS / e-board checks key off `role`.
+  titles text[] not null default '{}',
+  -- Legacy single-title column from the previous schema. Kept so
+  -- pre-existing rows don't lose data during the backfill below.
+  -- Deprecated — application code reads `titles` going forward.
   title text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
--- Idempotent column add for existing installations on previous schema.
+-- Idempotent column adds for existing installations.
 alter table profiles add column if not exists title text;
+alter table profiles add column if not exists titles text[] not null default '{}';
+-- One-time backfill: copy any pre-existing single title into titles[].
+update profiles
+   set titles = array[title]
+ where title is not null
+   and title <> ''
+   and array_length(titles, 1) is null;
 -- Payment handles. Treasurer publishes their Venmo + Zelle so members
 -- can pay dues. Other brothers may still fill these in for reimbursements.
 alter table profiles add column if not exists venmo_handle text;
@@ -87,6 +100,40 @@ returns boolean language sql stable security definer set search_path = public as
     false);
 $$;
 
+-- ----- EVENT CATEGORIES ---------------------------------------
+-- Color-coded "calendar overlays" — Apple/Google-calendar style.
+-- Seeded with sensible defaults; e-board can add chapter-specific
+-- ones (Big Brother, Senior Banquet, AASU, etc.) on the fly.
+create table if not exists event_categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  color text not null,           -- hex, e.g. '#7C3AED'
+  description text,
+  is_default boolean not null default false,
+  created_by uuid references profiles(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists event_categories_name_idx on event_categories(name);
+
+-- Seed system defaults. ON CONFLICT keeps re-runs and chapter
+-- customizations safe.
+insert into event_categories (name, color, is_default, description) values
+  ('General',          '#6B7280', true, 'Catch-all for events that don''t fit a category.'),
+  ('Chapter Meeting',  '#2563EB', true, 'Weekly all-brother chapter meeting.'),
+  ('E-Board Meeting',  '#C8A028', true, 'Officer-only sessions.'),
+  ('NME',              '#7C3AED', true, 'New member education meetings (run by NME).'),
+  ('Brotherhood',      '#BE123C', true, 'Bonding events organized by Brotherhood Chair.'),
+  ('Service',          '#0891B2', true, 'Community service projects.'),
+  ('Philanthropy',     '#DB2777', true, 'Fundraising for chapter philanthropies.'),
+  ('Fundraising',      '#059669', true, 'Internal fundraising (Chipotle, percentage nights).'),
+  ('Mixer / Social',   '#EA580C', true, 'Mixers and parties — VP External''s domain.'),
+  ('Formal',           '#7A1F1F', true, 'Annual Formal and Senior Banquet.'),
+  ('Rush',             '#CA8A04', true, 'Recruitment events.'),
+  ('Cultural / AASU',  '#0D9488', true, 'Cultural programming, AASU collaborations.'),
+  ('Risk / Training',  '#475569', true, 'Risk management trainings.')
+on conflict (name) do nothing;
+
 -- ----- EVENTS -------------------------------------------------
 create table if not exists events (
   id uuid primary key default gen_random_uuid(),
@@ -97,13 +144,17 @@ create table if not exists events (
   ends_at timestamptz not null,
   visibility event_visibility_t not null default 'global',
   color text,
+  category_id uuid references event_categories(id) on delete set null,
   created_by uuid not null references profiles(id) on delete restrict,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   check (ends_at >= starts_at)
 );
+-- Idempotent column add for existing installations.
+alter table events add column if not exists category_id uuid references event_categories(id) on delete set null;
 create index if not exists events_starts_idx on events(starts_at);
 create index if not exists events_visibility_idx on events(visibility);
+create index if not exists events_category_idx on events(category_id);
 
 -- ----- FINES --------------------------------------------------
 create table if not exists fines (
@@ -548,6 +599,9 @@ create trigger tasks_completed_at
 -- without page refreshes when officers make changes.
 do $$ begin
   alter publication supabase_realtime add table events;
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter publication supabase_realtime add table event_categories;
 exception when duplicate_object then null; end $$;
 do $$ begin
   alter publication supabase_realtime add table tasks;

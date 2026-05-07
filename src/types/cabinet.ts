@@ -16,6 +16,7 @@ export const CABINET_GROUPS = {
     titles: [
       "Academic Chair",
       "New Member Educator",
+      "Assistant New Member Educator",
       "Brotherhood Chair",
       "Risk Management Chair",
       "Historian",
@@ -50,3 +51,41 @@ export const CABINET_GROUPS = {
 export const ALL_CABINET_TITLES: string[] = Object.values(CABINET_GROUPS).flatMap(
   (g) => [...g.titles]
 );
+
+/**
+ * Maps a cabinet title to the calendar categories the holder typically
+ * works in. Used to:
+ *   1. Pre-fill the category dropdown when a cabinet chair adds an event.
+ *   2. Filter the "My cabinet" Home widget to relevant events.
+ *
+ * Names must match seed values in supabase/schema.sql `event_categories`.
+ */
+export const TITLE_TO_CATEGORIES: Record<string, string[]> = {
+  "New Member Educator": ["NME"],
+  "Assistant New Member Educator": ["NME"],
+  "Brotherhood Chair": ["Brotherhood"],
+  "Service Chair": ["Service"],
+  "Philanthropy Chair": ["Philanthropy"],
+  "Fundraising Chair": ["Fundraising"],
+  "Rush Chair": ["Rush"],
+  "PR Chair": ["Mixer / Social", "Rush"],
+  "Risk Management Chair": ["Risk / Training"],
+  "Historian": ["Brotherhood"],
+  "Culture Chair": ["Cultural / AASU"],
+  "AASU Representative": ["Cultural / AASU"],
+  "Merchandise Chair": ["Mixer / Social"],
+  "Stroll Captain": ["Cultural / AASU", "Mixer / Social"],
+  "Alumni Chair": ["Brotherhood"],
+  "Academic Chair": ["Risk / Training"],
+};
+
+/**
+ * Returns the deduplicated list of category names suggested for a
+ * brother given their current titles. First entry is the suggested
+ * default for new events.
+ */
+export function categoriesForTitles(titles: string[]): string[] {
+  const out = new Set<string>();
+  titles.forEach((t) => TITLE_TO_CATEGORIES[t]?.forEach((c) => out.add(c)));
+  return Array.from(out);
+}

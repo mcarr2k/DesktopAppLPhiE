@@ -2,6 +2,7 @@ import { LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { RoleBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { effectiveTitles } from "@/lib/titles";
 
 interface TopBarProps {
   onMenuClick?: () => void;
@@ -38,11 +39,21 @@ export function TopBar({ onMenuClick }: TopBarProps) {
       </div>
       <div className="flex shrink-0 items-center gap-2">
         <RoleBadge role={profile.role} />
-        {profile.title && (
-          <span className="hidden rounded-full bg-lphie-gold/20 px-2.5 py-0.5 text-xs font-semibold text-lphie-ink ring-1 ring-inset ring-lphie-gold/40 lg:inline">
-            {profile.title}
-          </span>
-        )}
+        {(() => {
+          const titles = effectiveTitles(profile);
+          if (titles.length === 0) return null;
+          const primary = titles[0];
+          const extra = titles.length - 1;
+          return (
+            <span
+              className="hidden rounded-full bg-lphie-gold/20 px-2.5 py-0.5 text-xs font-semibold text-lphie-ink ring-1 ring-inset ring-lphie-gold/40 lg:inline"
+              title={titles.join(" · ")}
+            >
+              {primary}
+              {extra > 0 ? ` +${extra}` : ""}
+            </span>
+          );
+        })()}
         <Button variant="ghost" size="sm" onClick={signOut} className="hidden sm:inline-flex">
           <LogOut size={14} /> Sign out
         </Button>

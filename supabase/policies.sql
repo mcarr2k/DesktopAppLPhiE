@@ -6,6 +6,7 @@
 
 alter table profiles            enable row level security;
 alter table events              enable row level security;
+alter table event_categories    enable row level security;
 alter table fines               enable row level security;
 alter table dues                enable row level security;
 alter table dues_installments   enable row level security;
@@ -78,6 +79,21 @@ create policy events_update_eboard on events
 create policy events_delete on events
   for delete to authenticated
   using (public.is_eboard() or created_by = auth.uid());
+
+-- ----- EVENT CATEGORIES ---------------------------------------
+drop policy if exists categories_select        on event_categories;
+drop policy if exists categories_write_eboard  on event_categories;
+
+-- All members read categories so calendar coloring stays in sync.
+create policy categories_select on event_categories
+  for select to authenticated using (true);
+
+-- Only e-board can add/edit/delete categories. Default rows are
+-- writable too so the chapter can recolor "NME" if they want.
+create policy categories_write_eboard on event_categories
+  for all to authenticated
+  using (public.is_eboard())
+  with check (public.is_eboard());
 
 -- ----- FINES --------------------------------------------------
 drop policy if exists fines_select          on fines;
@@ -182,11 +198,12 @@ create policy alumni_write on alumni_emails
   with check (public.current_role() in ('secretary','president'));
 
 -- ----- TASKS --------------------------------------------------
-drop policy if exists tasks_select        on tasks;
-drop policy if exists tasks_insert_eboard on tasks;
-drop policy if exists tasks_update_self   on tasks;
-drop policy if exists tasks_update_admin  on tasks;
-drop policy if exists tasks_delete_admin  on tasks;
+drop policy if exists tasks_select            on tasks;
+drop policy if exists tasks_insert_eboard     on tasks;
+drop policy if exists tasks_insert_authorized on tasks;
+drop policy if exists tasks_update_self       on tasks;
+drop policy if exists tasks_update_admin      on tasks;
+drop policy if exists tasks_delete_admin      on tasks;
 
 -- Everyone reads tasks; an assignee needs to see their work,
 -- an officer needs to see what they've delegated, and the wider
@@ -194,10 +211,24 @@ drop policy if exists tasks_delete_admin  on tasks;
 create policy tasks_select on tasks
   for select to authenticated using (true);
 
--- Only e-board members can create new task assignments.
-create policy tasks_insert_eboard on tasks
+-- E-board OR cabinet chairs (anyone with at least one title in
+-- profiles.titles) can create new task assignments. This lets the
+-- Fundraising Chair, NME, etc. delegate within their domain.
+create policy tasks_insert_authorized on tasks
   for insert to authenticated
-  with check (public.is_eboard() and assigned_by = auth.uid());
+  with check (
+    assigned_by = auth.uid()
+    and (
+      public.is_eboard()
+      or coalesce(
+        array_length(
+          (select titles from profiles where id = auth.uid()),
+          1
+        ),
+        0
+      ) > 0
+    )
+  );
 
 -- The assignee can move their own task through statuses.
 -- We don't try to enforce "only status/priority" at the RLS layer

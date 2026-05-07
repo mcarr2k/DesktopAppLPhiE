@@ -19,6 +19,18 @@ export interface Profile {
   pledge_class: string | null;
   graduation_year: number | null;
   avatar_url: string | null;
+  /**
+   * Cabinet / committee chair titles. A brother can hold several at
+   * once (e.g. ["Risk Management Chair", "Service Chair", "Fundraising Chair"]).
+   * Empty array when none.
+   */
+  titles: string[];
+  /**
+   * Deprecated single-title column from the previous schema. The
+   * migration in schema.sql backfills any existing value into
+   * `titles`. Read `titles` instead.
+   * @deprecated use `titles`
+   */
   title: string | null;
   venmo_handle: string | null;
   zelle_handle: string | null;
@@ -53,7 +65,19 @@ export interface ChapterEvent {
   ends_at: string;
   visibility: EventVisibility;
   color: string | null;
+  category_id: string | null;
   created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EventCategory {
+  id: string;
+  name: string;
+  color: string;
+  description: string | null;
+  is_default: boolean;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
